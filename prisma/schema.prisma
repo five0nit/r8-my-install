@@ -1,0 +1,56 @@
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://postgres.ywjqmfyendyimshacdep:Iam1man%21%40%23%24%25@aws-0-ap-southeast-2.pooler.supabase.com:6543/postgres"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String?
+  posts     Post[]
+  comments  Comment[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Company {
+  id        Int      @id @default(autoincrement())
+  name      String
+  serviceType String
+  posts     Post[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Post {
+  id              Int      @id @default(autoincrement())
+  userId          Int
+  user            User     @relation(fields: [userId], references: [id])
+  companyId       Int
+  company         Company  @relation(fields: [companyId], references: [id])
+  price           Float
+  installationDate DateTime
+  salesTeamRating  Int
+  installationTeamRating Int
+  cleanlinessRating Int
+  quoteImage      String?
+  installPhotos   String[]
+  comments        Comment[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  postId    Int
+  post      Post     @relation(fields: [postId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
